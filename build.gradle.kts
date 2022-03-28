@@ -15,6 +15,8 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation("com.oracle.database.jdbc:ojdbc10:19.14.0.0")
+    implementation ("com.zaxxer:HikariCP:5.0.0")
+
     //implementation ("com.zaxxer:HikariCP:5.0.1")
 }
 

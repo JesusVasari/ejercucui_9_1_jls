@@ -1,66 +1,52 @@
 import java.sql.Connection
+import java.sql.Date
 import java.sql.DriverManager
 
 
-data class livres(val id: Int, val autor: String)
+data class catalogo(val id: Int, val autor: String, val genero:String,
+                    val precio:Double, val fecha : Date, val des:String)
 
-fun selectAutor(connection: Connection) {
-    val query = connection.prepareStatement("SELECT autor FROM livres")
-    val result = query.executeQuery()
 
-    val users = mutableListOf<livres>()
-    println("Query lanzada para autor ${result.fetchSize}")
-
-    while (result.next()) {
-        println("Iteración...")
-
-        // getting the value of the id column
-        val id = result.getInt("id")
-
-        // getting the value of the name column
-        val name = result.getString("autor")
-        /*
-        constructing a User object and
-        putting data into the list
-         */
-        println("Creando y añadiend libro: $id $name...")
-        users.add(livres(id, name))
-    }
-    println("Usuarios: " + users)
-
-}
-
-fun selectTitulo(connection: Connection) {
-    val query = connection.prepareStatement("SELECT titulo FROM libros")
-    val result = query.executeQuery()
-    val users = mutableListOf<livres>()
-    println(users)
-}
 fun main(args: Array<String>) {
-    val acceso = "jdbc:oracle:thin:@localhost:1521:XE"
+    val acceso = "jdbc:oracle:thin:@localhost:1521/XE"
 
     // get the connection
     val connection = DriverManager
         .getConnection(acceso, "alumno", "alumno")
 
     println(connection.isValid(0))
-    //selectAutor(connection)
-            sa(connection)
-    connection.close()
-    //selectTitulo(connection)
-}
 
+    // the query is only prepared not executed
+    val query = connection.prepareStatement("SELECT * FROM libros")
 
-fun sa(c: Connection)
-{
-    val users = mutableListOf<livres>()
-    val ps = c.prepareStatement("select autor from libros")
-    val result = ps.executeQuery()
+    // the query is executed and results are fetched
+    val result = query.executeQuery()
 
-    println("Query lanzada para autor ${result}")
+    // an empty list for holding the results
+    val users = mutableListOf<catalogo>()
 
     while (result.next()) {
-        println("Iteración...")
+
+        // getting the value of the id column
+        val id = result.getInt("ID")
+
+        // getting the value of the name column
+        val name = result.getString("AUTOR")
+
+        val gen = result.getString("genero")
+
+        val precio = result.getDouble("precio")
+
+        val fecha = result.getDate("fecha")
+
+        val desc = result.getString("descripcion")
+
+        /*
+        constructing a User object and
+        putting data into the list
+         */
+        users.add(catalogo(id, name ,gen,precio,fecha,desc))
     }
-    println("Usuarios: " + users)
+    println(users)
+
 }
